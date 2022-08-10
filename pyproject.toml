@@ -6,11 +6,12 @@ authors = ["fidanze <fidanze@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pyglet = "^1.5.26"
+termcolor = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
 mypy = "^0.971"
+pylint = "^2.14.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
