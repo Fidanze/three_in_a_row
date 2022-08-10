@@ -1,4 +1,22 @@
 {
+    "mypy.runUsingActiveInterpreter": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyPath": "${workspaceFolder}/.venv/Scripts/mypy",
+    // "python.linting.mypyArgs": [
+    //     "--ignore-missing-imports",
+    //     "--follow-imports=silent",
+    //     "--show-column-numbers",
+    //     "--disallow-untyped-defs",
+    //     "--disallow-untyped-calls"
+    // ],
     "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true
+    "python.linting.pylintPath": "${workspaceFolder}/.venv/Scripts/pylint",
+    "python.linting.enabled": false,
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "100"
+    ],
+    "python.formatting.provider": "black",
+    "terminal.integrated.gpuAcceleration": "off",
+    "editor.formatOnSave": true
 }
