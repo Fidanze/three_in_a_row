@@ -1,4 +1,4 @@
-"""Realisation of game crystal by using Enum"""
+"""Realisation of game crystals by using Enum"""
 import enum
 from termcolor import colored
 
@@ -10,10 +10,11 @@ class Crystal(enum.Enum):
     PLUS = {"symbol": "+", "color": "blue"}
     DOLLAR = {"symbol": "$", "color": "green"}
     CROSS = {"symbol": "X", "color": "red"}
+    AT = {"symbol": "@", "color": "magenta"}
 
-    def __init__(self, vals:dict[str,str]) -> None:
+    def __init__(self, vals: dict[str, str]) -> None:
         self.symbol = vals["symbol"]
         self.color = vals["color"]
 
     def __str__(self) -> str:
-        return colored(f'{self.name}: {self.value["symbol"]}', self.value["color"])
+        return colored(self.value["symbol"], self.value["color"])
