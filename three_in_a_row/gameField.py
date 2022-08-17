@@ -14,38 +14,60 @@ class GameField:
                 el: type = choice(list(symbol_class))
                 row.append(el)
             self.field.append(row)
+        self.remove()
         self.N = N
 
     def remove(self, to_remove: set[tuple[int, int]]):
-        # removing
-        for y, x in to_remove:
-            self.field[y][x] = None
 
-        # fall from up
-        self.fall()
+        while to_remove := self._get_triples():
+            # removing
+            for y, x in to_remove:
+                self.field[y][x] = None
 
-        # generate new symbols in None points
-        for y in range(self.N):
-            for x in range(self.N):
-                if self.field[y][x] == None:
-                    self.field[y][x] = choice(list(Crystal))
+            # fall from up
+            self.fall()
+
+            # generate new symbols in None points
+            for y in range(self.N):
+                for x in range(self.N):
+                    if self.field[y][x] == None:
+                        self.field[y][x] = choice(list(Crystal))
 
     def fall(self) -> None:
         for x in range(self.N):
-            for y in range(self.N):
-                for yk in range(x, self.N):
-                    if self.field[y][x] != None and self.field[yk][x] == None:
-                        self.swap(y, x, yk, x)
+            for y in range(self.N - 1, -1, -1):
+                if self.field[y][x] == None:
+                    for y_offset in range(1, y):
+                        set[tuple[int, int]]
 
     def swap(self, y1: int, x1: int, y2: int, x2: int) -> None:
         # checking neighborhood
-        if (y1 in (y2 - 1, y2, y2 + 1)) and (x1 in (x2 - 1, x2, x2 + 1)):
+        if (x1 == x2 and y1 in (y2 - 1, y2 + 1)) or (y1 == y2 and x1 in (x2 - 1, x2 + 1)):
             self.field[y1][x1], self.field[y2][x2] = self.field[y2][x2], self.field[y1][x1]
         else:
             raise Exception("Symbols must be neighbors")
 
-    def get_triples(self) -> set[tuple[int, int]]:
-        to_remove = set()
+    def _get_triples(self) -> set[tuple[int, int]]:
+        to_remove: set[Any] = set()
+
+        for y in range(self.N):
+            for x in range(self.N):
+                if y >= 2:
+                    if (
+                        len(
+                            triple := {self.field[y][x], self.field[y - 1][x], self.field[y - 2][x]}
+                        )
+                        == 1
+                    ):
+                        to_remove.union(triple)
+                if x >= 2:
+                    if (
+                        len(
+                            triple := {self.field[y][x], self.field[y][x - 1], self.field[y][x - 2]}
+                        )
+                        == 1
+                    ):
+                        to_remove.union(triple)
 
         # horizontal checking
         for row_ind, row in enumerate(self.field):
