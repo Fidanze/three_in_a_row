@@ -5,11 +5,11 @@ from .gameField import GameField
 class OutputData:
     """Class for representation of console display"""
 
-    def __init__(self, game_name: str, record: int, score: int) -> None:
+    def __init__(self, game_name: str, record: int, score: int, N: int = 5) -> None:
         self.game_name = game_name
         self.record = record
         self.score = score
-        self.game_field = GameField(5, Crystal)
+        self.game_field = GameField(N, Crystal)
         self.command = ""
         self.is_started = False
 
