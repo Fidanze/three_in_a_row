@@ -1,4 +1,5 @@
 from three_in_a_row.crystal import Crystal
+from .gameField import GameField
 
 
 class OutputData:
@@ -8,15 +9,16 @@ class OutputData:
         self.game_name = game_name
         self.record = record
         self.score = score
-        self.game_field = []
+        self.game_field = GameField(5, Crystal)
         self.command = ""
+        self.is_started = False
 
     def __str__(self) -> str:
         result = ""
         result += f"Welcome to Nastya's game => {self.game_name}!\n"
         result += f"Your record: {self.record}!\n"
         result += f"Current score: {self.score}!\n"
-        for row in self.game_field:
-            result += "".join(map(str, row)) + "\n"
+        if self.is_started:
+            result += str(self.game_field)
         result += self.command
         return result
