@@ -285,6 +285,25 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "tomlkit"
+version = "0.11.3"
+description = "Style preserving TOML library"
+category = "dev"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[[package]]
+<<<<<<< HEAD
+=======
+name = "types-termcolor"
+version = "1.1.5"
+description = "Typing stubs for termcolor"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+>>>>>>> bf661e1c893dfcb9f2a7a048e695853bad7c2259
 name = "typing-extensions"
 version = "4.3.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
