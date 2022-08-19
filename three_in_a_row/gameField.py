@@ -1,31 +1,38 @@
-from enum import EnumMeta
+from enum import EnumMeta, Enum
 from random import choice
-from typing import Any
+from typing import Any, Type
+
+from three_in_a_row.cli import cli_redraw
 
 
 class GameField:
     def __init__(self, N: int, symbol_class: EnumMeta) -> None:
         self.symbol_class = symbol_class
-        self.N = N
-        self.field: list[list[Any]] = []
-        for i in range(N):
-            row: list[type] = []
-            for j in range(N):
-                el: type = choice(list(symbol_class))
-                row.append(el)
-            self.field.append(row)
+        self._field: list[list[Enum]] = [
+            [choice(list(symbol_class)) for _ in range(N)] for _ in range(N)
+        ]
         self.remove()
 
-    def __len__(self) -> int:
-        return self.N
+    @property
+    def field(self):
+        return self._field
 
-    def __getitem__(self, item):
+    @field.setter  # type: ignore
+    @cli_redraw
+    def field(self, new_field):
+        self._field = new_field
+
+    def __len__(self) -> int:
+        return len(self.field)
+
+    def __getitem__(self, item) -> Any:
         return self.field[item]
 
-    def __setitem__(self, item, value):
+    @cli_redraw
+    def __setitem__(self, item, value) -> None:
         self.field[item] = value
 
-    def remove(self):
+    def remove(self) -> int:
         count = 0
         while to_remove := self._get_triples():
             # removing
@@ -37,18 +44,23 @@ class GameField:
             self.fall()
 
             # generate new symbols in None points
-            for y in range(self.N):
-                for x in range(self.N):
+            for y in range(len(self.field)):
+                for x in range(len(self.field)):
                     if self[y][x] == None:
                         self[y][x] = choice(list(self.symbol_class))
         return count
 
     def fall(self) -> None:
-        for x in range(self.N):
-            for y in range(self.N - 1, -1, -1):
+        # run by columns
+        for x in range(len(self.field)):
+            # run in X-column from bottom to top
+            for y in range(len(self.field) - 1, -1, -1):
+                # search for deleted symbol
                 if self[y][x] == None:
+                    # search not deleted symbol in upper part X-column
                     for y_offset in range(y - 1, -1, -1):
                         if self[y_offset][x] != None:
+                            # change them and continue to search of deleted symbol
                             self[y][x], self[y_offset][x] = (
                                 self[y][x],
                                 self[y_offset][x],
@@ -61,19 +73,21 @@ class GameField:
             y1 == y2 and (x1 == x2 - 1 or x1 == x2 + 1)
         ):
             self[y1][x1], self[y2][x2] = self[y2][x2], self[y1][x1]
+            # check is swap create any triple
             if self._get_triples():
                 return self.remove()
             else:
-                self[y2][x2], self[y1][x1] = self[y1][x1], self[y2][x2]
+                # repeat swap to rollback changes
+                self[y1][x1], self[y2][x2] = self[y2][x2], self[y1][x1]
                 return 0
         else:
-            raise Exception("Symbols must be neighbors")
+            return -1
 
     def _get_triples(self) -> set[tuple[int, int]]:
         to_remove: set[Any] = set()
 
-        for y in range(self.N):
-            for x in range(self.N):
+        for y in range(len(self.field)):
+            for x in range(len(self.field)):
                 if y >= 2:
                     if self[y][x] == self[y - 1][x] == self[y - 2][x]:
                         to_remove.add((y, x))
